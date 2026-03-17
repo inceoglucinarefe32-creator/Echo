@@ -3,224 +3,298 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Echo OS | Gelişmiş AI Platformu</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=JetBrains+Mono&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <title>ECHO OS | Global AI Infrastructure</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=JetBrains+Mono&family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <style>
-        :root { --o: #FA9048; --t: #40E0D0; --bg: #050505; --panel: #0a0a0a; --border: #1f1f1f; }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; transition: 0.3s ease; }
-        body { background: var(--bg); color: #fff; overflow-x: hidden; }
+        :root { --p: #FA9048; --s: #40E0D0; --bg: #030303; --panel: rgba(15,15,15,0.8); --glass: rgba(255,255,255,0.03); --br: rgba(250, 144, 72, 0.2); }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; user-select: none; }
+        body { background: var(--bg); color: #fff; overflow: hidden; height: 100vh; }
+        
+        /* Canvas Arkaplan */
+        #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
 
         /* Ortak Sınıflar */
         .hidden { display: none !important; }
-        .fade-in { animation: fadeIn 0.8s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .btn { padding: 12px 24px; border-radius: 4px; font-weight: bold; cursor: pointer; border: 1px solid var(--p); background: transparent; color: var(--p); font-family: 'Orbitron'; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; }
+        .btn:hover { background: var(--p); color: #000; box-shadow: 0 0 20px var(--p); }
+        .btn-solid { background: var(--p); color: #000; }
+        .glass-panel { background: var(--panel); backdrop-filter: blur(12px); border: 1px solid var(--br); border-radius: 12px; }
 
-        /* --- ANA SAYFA (LANDING PAGE) --- */
-        #home-page { min-height: 100vh; display: flex; flex-direction: column; background: radial-gradient(circle at 50% 30%, #1a1a1a, var(--bg)); }
-        header { display: flex; justify-content: space-between; align-items: center; padding: 25px 50px; border-bottom: 1px solid var(--border); background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); }
-        .brand { font-family: 'Orbitron'; font-size: 32px; font-weight: 900; color: var(--o); text-shadow: 0 0 20px rgba(250, 144, 72, 0.4); }
-        
-        .header-auth { display: flex; gap: 15px; }
-        .btn { padding: 12px 25px; border-radius: 6px; font-weight: bold; cursor: pointer; border: none; font-family: 'Orbitron'; font-size: 14px; display: flex; align-items: center; gap: 8px; }
-        .btn-g { background: #fff; color: #000; }
-        .btn-h { background: #00a4ef; color: #fff; }
-        .btn-primary { background: var(--o); color: #000; box-shadow: 0 0 15px rgba(250, 144, 72, 0.3); }
-        .btn-primary:hover { box-shadow: 0 0 30px var(--o); transform: scale(1.05); }
+        /* --- AÇILIŞ EKRANI (LANDING) --- */
+        #landing { display: flex; flex-direction: column; height: 100vh; justify-content: center; align-items: center; text-align: center; z-index: 10; position: relative; }
+        .glitch-title { font-family: 'Orbitron'; font-size: 80px; font-weight: 900; color: var(--p); text-shadow: 2px 2px 10px rgba(250,144,72,0.5); margin-bottom: 20px; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { text-shadow: 0 0 10px var(--p); } 50% { text-shadow: 0 0 30px var(--p), 0 0 50px var(--s); } 100% { text-shadow: 0 0 10px var(--p); } }
+        .landing-desc { font-size: 18px; color: #aaa; max-width: 600px; margin-bottom: 40px; line-height: 1.6; }
 
-        .hero { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 20px; }
-        .hero h1 { font-family: 'Orbitron'; font-size: 60px; margin-bottom: 20px; line-height: 1.2; }
-        .hero h1 span { color: var(--t); text-shadow: 0 0 20px rgba(64, 224, 208, 0.4); }
-        .hero p { font-size: 18px; color: #aaa; max-width: 600px; margin-bottom: 40px; }
+        /* --- LOGIN MODAL --- */
+        #auth-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 100; backdrop-filter: blur(5px); }
+        .auth-box { padding: 40px; width: 400px; text-align: center; }
+        .auth-btn { width: 100%; padding: 15px; margin-bottom: 15px; border: none; border-radius: 5px; font-weight: bold; font-size: 15px; cursor: pointer; display: flex; justify-content: center; gap: 10px; transition: 0.2s; }
+        .ab-google { background: #fff; color: #000; }
+        .ab-hotmail { background: #00a4ef; color: #fff; }
+        .ab-github { background: #24292e; color: #fff; border: 1px solid #444; }
+        .auth-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
 
-        /* --- DASHBOARD (UYGULAMA ARAYÜZÜ) --- */
-        #app-page { height: 100vh; display: flex; flex-direction: column; }
-        .app-nav { height: 60px; background: var(--panel); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; padding: 0 30px; }
+        /* --- OS ANA EKRAN --- */
+        #os-core { display: flex; flex-direction: column; height: 100vh; }
         
-        .dashboard-grid { display: grid; grid-template-columns: 260px 1fr 400px; height: calc(100vh - 60px); gap: 15px; padding: 15px; }
-        .card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; display: flex; flex-direction: column; overflow: hidden; }
-        .card-header { padding: 15px; border-bottom: 1px solid var(--border); font-family: 'Orbitron'; color: var(--t); font-size: 14px; background: rgba(255,255,255,0.02); }
-        
-        /* Sol Menü */
-        .menu-list { list-style: none; padding: 15px; }
-        .menu-list li { padding: 12px 15px; margin-bottom: 8px; border-radius: 6px; cursor: pointer; color: #bbb; display: flex; align-items: center; gap: 10px; }
-        .menu-list li:hover { background: rgba(250, 144, 72, 0.1); color: #fff; }
-        .menu-list li.active { background: rgba(250, 144, 72, 0.2); border-left: 3px solid var(--o); color: var(--o); font-weight: bold; }
+        /* Topbar */
+        .topbar { height: 60px; display: flex; justify-content: space-between; align-items: center; padding: 0 30px; border-bottom: 1px solid var(--br); background: rgba(0,0,0,0.5); }
+        .tb-logo { font-family: 'Orbitron'; font-size: 20px; color: var(--s); font-weight: 900; }
+        .tb-stats { display: flex; gap: 20px; font-family: 'JetBrains Mono'; font-size: 12px; color: #888; }
+        .tb-stats span { color: var(--p); }
 
-        /* Orta: Web Builder */
-        .builder-area { padding: 20px; flex: 1; display: flex; flex-direction: column; gap: 15px; }
-        .prompt-box { width: 100%; height: 120px; background: #050505; border: 1px solid #333; color: #fff; padding: 15px; border-radius: 8px; font-family: 'JetBrains Mono'; resize: none; outline: none; }
-        .prompt-box:focus { border-color: var(--t); box-shadow: 0 0 10px rgba(64,224,208,0.2); }
+        /* OS Grid */
+        .os-workspace { display: flex; flex: 1; overflow: hidden; }
         
-        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        select { background: #111; color: #fff; border: 1px solid #333; padding: 10px; border-radius: 5px; outline: none; }
+        /* Sidebar */
+        .sidebar { width: 250px; border-right: 1px solid var(--br); padding: 20px 10px; background: rgba(10,10,10,0.6); display: flex; flex-direction: column; gap: 10px; }
+        .nav-item { padding: 15px 20px; border-radius: 8px; cursor: pointer; color: #bbb; transition: 0.3s; font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 15px; }
+        .nav-item:hover { background: var(--glass); color: #fff; }
+        .nav-item.active { background: rgba(250, 144, 72, 0.15); color: var(--p); border-left: 4px solid var(--p); }
+        
+        /* Content Area */
+        .main-content { flex: 1; padding: 20px; position: relative; overflow-y: auto; }
+        
+        /* --- MODULE: AI BUILDER --- */
+        .builder-grid { display: grid; grid-template-columns: 1fr 1fr; height: 100%; gap: 20px; }
+        .b-panel { display: flex; flex-direction: column; gap: 15px; }
+        textarea { width: 100%; height: 150px; background: rgba(0,0,0,0.5); border: 1px solid #333; color: #fff; padding: 15px; border-radius: 8px; font-family: 'Inter'; resize: none; outline: none; font-size: 14px; }
+        textarea:focus { border-color: var(--s); }
+        
+        .code-editor { flex: 1; background: #0d0d0d; border: 1px solid #333; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; }
+        .editor-tabs { display: flex; background: #1a1a1a; border-bottom: 1px solid #333; }
+        .tab { padding: 10px 20px; font-size: 12px; color: #888; cursor: pointer; font-family: 'JetBrains Mono'; }
+        .tab.active { background: #0d0d0d; color: var(--p); border-top: 2px solid var(--p); }
+        .code-area { flex: 1; padding: 15px; font-family: 'JetBrains Mono'; font-size: 13px; color: #a9b7c6; overflow-y: auto; white-space: pre-wrap; }
+        
+        iframe.preview-frame { width: 100%; height: 100%; border: none; background: #fff; border-radius: 8px; }
 
-        /* Sağ: Önizleme & Terminal */
-        .terminal { height: 200px; background: #000; color: #0f0; font-family: 'JetBrains Mono'; font-size: 11px; padding: 15px; overflow-y: auto; border-bottom: 1px solid var(--border); }
-        .preview-frame { flex: 1; background: #fff; border: none; width: 100%; }
-        
-        .god-mode { position: absolute; bottom: 20px; left: 20px; font-size: 11px; color: var(--o); border: 1px solid var(--o); padding: 5px 10px; border-radius: 20px; }
+        /* --- MODULE: TERMINAL --- */
+        .cmd-interface { height: 100%; background: #050505; border: 1px solid #222; border-radius: 8px; padding: 20px; font-family: 'JetBrains Mono'; display: flex; flex-direction: column; }
+        .cmd-output { flex: 1; overflow-y: auto; color: #ccc; font-size: 13px; line-height: 1.5; margin-bottom: 10px; }
+        .cmd-line { color: var(--s); }
+        .cmd-error { color: #ff4d4d; }
+        .cmd-success { color: #00ff00; }
+        .cmd-input-wrapper { display: flex; align-items: center; gap: 10px; color: var(--p); font-size: 14px; }
+        .cmd-input { flex: 1; background: transparent; border: none; color: #fff; font-family: 'JetBrains Mono'; font-size: 14px; outline: none; }
     </style>
 </head>
 <body>
 
-<div id="home-page" class="fade-in">
-    <header>
-        <div class="brand">ECHO.OS</div>
-        <div class="header-auth">
-            <button class="btn btn-g" onclick="alert('Google Auth Başlatılıyor...')">G</button>
-            <button class="btn btn-h" onclick="alert('Hotmail Auth Başlatılıyor...')">H</button>
-            <button class="btn btn-primary" onclick="enterApp()">SİSTEME GİRİŞ YAP</button>
-        </div>
-    </header>
+<canvas id="bg-canvas"></canvas>
 
-    <div class="hero">
-        <h1>Geleceğin Web Stüdyosu<br><span>Yapay Zeka İle İnşa Et</span></h1>
-        <p>Sadece hayal et ve yaz. Echo'nun gelişmiş AI motoru senin için saniyeler içinde modern, responsive ve tamamen kodlanmış web siteleri oluştursun.</p>
-        <button class="btn btn-primary" style="font-size: 18px; padding: 15px 40px;" onclick="enterApp()">ÜCRETSİZ BAŞLA (GOD MODE)</button>
+<div id="landing">
+    <div class="glitch-title">ECHO.OS</div>
+    <p class="landing-desc">Dünyanın en gelişmiş Yapay Zeka destekli Web ve Sistem stüdyosu. Hayal et, yaz ve gerçeğe dönüşmesini izle.</p>
+    <button class="btn btn-solid" style="font-size: 18px;" onclick="showAuth()">SİSTEME BAĞLAN</button>
+</div>
+
+<div id="auth-modal" class="hidden">
+    <div class="auth-box glass-panel">
+        <h2 style="font-family: 'Orbitron'; color: var(--p); margin-bottom: 30px;">AUTH PROTOCOL</h2>
+        <button class="auth-btn ab-google" onclick="login('Google')">Google İle Giriş</button>
+        <button class="auth-btn ab-hotmail" onclick="login('Hotmail')">Hotmail İle Giriş</button>
+        <button class="auth-btn ab-github" onclick="login('GitHub')">GitHub İle Giriş</button>
+        <button class="btn" style="width: 100%; margin-top: 20px;" onclick="hideAuth()">İPTAL</button>
     </div>
 </div>
 
-<div id="app-page" class="hidden">
-    <div class="app-nav">
-        <div class="brand" style="font-size: 20px;">ECHO<span style="color:#fff;">.STUDIO</span></div>
-        <button class="btn" style="background: transparent; color: #fff; border: 1px solid #333;" onclick="exitApp()">ÇIKIŞ YAP</button>
+<div id="os-core" class="hidden fade-in">
+    <div class="topbar">
+        <div class="tb-logo">ECHO <span style="color:#fff; font-size: 12px; font-family:'Inter';">v4.0 PRO</span></div>
+        <div class="tb-stats">
+            <div>CPU: <span id="cpu-stat">12%</span></div>
+            <div>RAM: <span id="ram-stat">2.4 GB</span></div>
+            <div>PING: <span style="color:var(--s)">14ms</span></div>
+            <div id="clock">00:00:00</div>
+        </div>
+        <button class="btn" style="padding: 6px 15px; font-size: 11px;" onclick="logout()">ÇIKIŞ (DISCONNECT)</button>
     </div>
 
-    <div class="dashboard-grid">
-        <div class="card">
-            <div class="card-header">MODÜLLER</div>
-            <ul class="menu-list">
-                <li class="active">🌐 AI Web Site Builder</li>
-                <li onclick="alert('Video Modülü yapım aşamasında. Şimdilik Site Oluşturucu aktif!')">🎥 Video Watermark AI</li>
-                <li>⚙️ Ayarlar & Veritabanı</li>
-                <li style="color:var(--t)">👑 Pro Sürüm Aktif</li>
-            </ul>
-            <div class="god-mode">Erişim: Sınırsız (Admin)</div>
+    <div class="os-workspace">
+        <div class="sidebar">
+            <div class="nav-item active" onclick="switchView('builder', this)">🌐 AI Web Builder</div>
+            <div class="nav-item" onclick="switchView('terminal', this)">💻 Root Terminal</div>
+            <div class="nav-item" onclick="switchView('video', this)">🎥 Video AI Lab</div>
+            <div class="nav-item" style="margin-top: auto; color: var(--p);">⚙️ God Mode Ayarları</div>
         </div>
 
-        <div class="card">
-            <div class="card-header">AI SITE GENERATOR CORE</div>
-            <div class="builder-area">
-                <p style="font-size: 13px; color: #aaa;">Nasıl bir site istiyorsun? Detaylıca tarif et:</p>
-                <textarea id="ai-prompt" class="prompt-box" placeholder="Örn: Siyah ve turuncu renklerde, ortasında 'Hoşgeldiniz' yazan, menüsü olan modern bir oyun tanıtım sitesi yap..."></textarea>
-                
-                <div class="options-grid">
-                    <select id="theme-color">
-                        <option value="dark">Karanlık Tema (Dark Mode)</option>
-                        <option value="light">Aydınlık Tema (Light Mode)</option>
-                        <option value="cyber">Cyberpunk (Neon)</option>
-                    </select>
-                    <select id="site-type">
-                        <option value="landing">Açılış Sayfası (Landing)</option>
-                        <option value="portfolio">Portfolyo</option>
-                        <option value="blog">Blog</option>
-                    </select>
+        <div class="main-content">
+            
+            <div id="view-builder" class="builder-grid">
+                <div class="b-panel glass-panel" style="padding: 20px;">
+                    <h3 style="color:var(--s); font-family:'Orbitron'; margin-bottom: 15px;">PROMPT ENGINE</h3>
+                    <textarea id="ai-prompt" placeholder="Sitenin tasarımını detaylıca anlat... (Örn: Siyah arka planlı, neon yeşil butonları olan bir hacker portfolyosu yaz)"></textarea>
+                    <button class="btn btn-solid" style="margin-top: 15px; width: 100%;" onclick="generateCode()">SİTEYİ İNŞA ET</button>
+                    
+                    <div class="code-editor" style="margin-top: 20px;">
+                        <div class="editor-tabs">
+                            <div class="tab active">index.html</div>
+                            <div class="tab">style.css</div>
+                            <div class="tab">script.js</div>
+                        </div>
+                        <div id="code-output" class="code-area">&lt;!-- AI tarafından üretilen kodlar burada görünecek --&gt;</div>
+                    </div>
                 </div>
-
-                <button class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: auto; padding: 20px; font-size: 16px;" onclick="generateAdvancedSite()">SİTEYİ OLUŞTUR / KODLA</button>
+                <div class="b-panel glass-panel" style="padding: 5px;">
+                    <iframe id="live-preview" class="preview-frame"></iframe>
+                </div>
             </div>
-        </div>
 
-        <div class="card">
-            <div class="card-header">CANLI ÖNİZLEME & LOGLAR</div>
-            <div id="terminal" class="terminal">
-                > Echo Kernel Başlatıldı...<br>
-                > Web Build Motoru Hazır...<br>
-                > Kullanıcı komutu bekleniyor...
+            <div id="view-terminal" class="cmd-interface hidden">
+                <div id="cmd-history" class="cmd-output">
+                    Echo OS Root Terminal v4.0.1<br>
+                    Yazabileceğiniz komutları görmek için <span class="cmd-line">'help'</span> yazın.<br><br>
+                </div>
+                <div class="cmd-input-wrapper">
+                    root@echo:~# <input type="text" id="cmd-input" class="cmd-input" autocomplete="off" onkeypress="handleCmd(event)">
+                </div>
             </div>
-            <iframe id="live-preview" class="preview-frame"></iframe>
+
+            <div id="view-video" class="hidden" style="height: 100%; display: flex; justify-content: center; align-items: center; flex-direction: column; color: #888;">
+                <i class="fas fa-video" style="font-size: 50px; color: var(--s); margin-bottom: 20px;"></i>
+                <h2>VIDEO AI LAB</h2>
+                <p>Bu modül şu anda kalibrasyon aşamasındadır. Yükleniyor...</p>
+            </div>
+
         </div>
     </div>
 </div>
 
 <script>
-    // Sayfa Geçişleri
-    const homePage = document.getElementById('home-page');
-    const appPage = document.getElementById('app-page');
-    const terminal = document.getElementById('terminal');
-    const preview = document.getElementById('live-preview');
-
-    function enterApp() {
-        homePage.classList.add('hidden');
-        appPage.classList.remove('hidden');
-        appPage.classList.add('fade-in');
-    }
-
-    function exitApp() {
-        appPage.classList.add('hidden');
-        homePage.classList.remove('hidden');
-        homePage.classList.add('fade-in');
-    }
-
-    function logTerm(msg) {
-        terminal.innerHTML += `<br>> <span style="color:#fff">${msg}</span>`;
-        terminal.scrollTop = terminal.scrollHeight;
-    }
-
-    // Gelişmiş Site Oluşturma Algoritması
-    function generateAdvancedSite() {
-        const prompt = document.getElementById('ai-prompt').value;
-        const theme = document.getElementById('theme-color').value;
-        const type = document.getElementById('site-type').value;
-
-        if(!prompt) {
-            alert("Lütfen AI'ya bir şeyler yaz!");
-            return;
+    /* --- SİSTEM DEĞİŞKENLERİ VE DURUMLAR --- */
+    const UI = {
+        landing: document.getElementById('landing'),
+        authModal: document.getElementById('auth-modal'),
+        osCore: document.getElementById('os-core'),
+        views: {
+            builder: document.getElementById('view-builder'),
+            terminal: document.getElementById('view-terminal'),
+            video: document.getElementById('view-video')
         }
+    };
 
-        logTerm("Girdi analiz ediliyor: " + prompt.substring(0, 20) + "...");
-        logTerm(`Tema: ${theme} | Tip: ${type}`);
-        
-        let bgColor = "#111"; let textColor = "#fff"; let primary = "#FA9048";
-        if(theme === "light") { bgColor = "#f4f4f4"; textColor = "#333"; primary = "#0056b3"; }
-        if(theme === "cyber") { bgColor = "#050505"; textColor = "#fff"; primary = "#40E0D0"; }
+    /* --- CANVAS ARKA PLAN SİSTEMİ --- */
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+    let particles = [];
+    for(let i=0; i<100; i++) {
+        particles.push({
+            x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+            vx: (Math.random() - 0.5) * 0.5, vy: (Math.random() - 0.5) * 0.5,
+            size: Math.random() * 2
+        });
+    }
+    function draw() {
+        ctx.fillStyle = "rgba(3, 3, 3, 0.2)"; // Trail effect
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "#FA9048";
+        particles.forEach(p => {
+            p.x += p.vx; p.y += p.vy;
+            if(p.x < 0 || p.x > canvas.width) p.vx *= -1;
+            if(p.y < 0 || p.y > canvas.height) p.vy *= -1;
+            ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI*2); ctx.fill();
+        });
+        requestAnimationFrame(draw);
+    }
+    draw();
 
-        setTimeout(() => {
-            logTerm("HTML İskeleti Çıkarılıyor...");
-            logTerm("CSS Grid Sistemleri Kuruluyor...");
-        }, 800);
+    /* --- ARAYÜZ KONTROLLERİ --- */
+    function showAuth() { UI.authModal.classList.remove('hidden'); }
+    function hideAuth() { UI.authModal.classList.add('hidden'); }
+    
+    function login(provider) {
+        alert(provider + " Güvenlik Duvarı Aşıldı. Giriş Onaylandı!");
+        hideAuth();
+        UI.landing.classList.add('hidden');
+        UI.osCore.classList.remove('hidden');
+    }
+    
+    function logout() {
+        UI.osCore.classList.add('hidden');
+        UI.landing.classList.remove('hidden');
+    }
 
-        setTimeout(() => {
-            logTerm("Componentler Yerleştiriliyor...");
-            logTerm("<span style='color:var(--o)'>Derleme Tamamlandı! Canlı Önizleme Aktarıldı.</span>");
+    function switchView(viewName, element) {
+        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+        element.classList.add('active');
+        Object.keys(UI.views).forEach(key => UI.views[key].classList.add('hidden'));
+        UI.views[viewName].classList.remove('hidden');
+        if(viewName === 'terminal') document.getElementById('cmd-input').focus();
+    }
+
+    /* --- SAAT VE SİSTEM İSTATİSTİKLERİ --- */
+    setInterval(() => {
+        const d = new Date();
+        document.getElementById('clock').innerText = d.toLocaleTimeString();
+        document.getElementById('cpu-stat').innerText = Math.floor(Math.random() * 30 + 5) + "%";
+    }, 1000);
+
+    /* --- TERMINAL SİSTEMİ --- */
+    const cmdHistory = document.getElementById('cmd-history');
+    function handleCmd(e) {
+        if(e.key === 'Enter') {
+            const val = e.target.value.trim().toLowerCase();
+            if(!val) return;
+            printCmd(`root@echo:~# ${val}`, 'cmd-line');
             
-            // AI Tarafından Üretilmiş Gerçekçi Bir Şablon
-            const generatedCode = `
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <style>
-                        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: ${bgColor}; color: ${textColor}; }
-                        header { background: rgba(0,0,0,0.1); padding: 20px 50px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid ${primary}; }
-                        nav a { color: ${textColor}; text-decoration: none; margin-left: 20px; font-weight: bold; }
-                        .hero { padding: 100px 20px; text-align: center; }
-                        h1 { font-size: 50px; margin-bottom: 20px; color: ${primary}; }
-                        p { font-size: 18px; max-width: 600px; margin: 0 auto 30px auto; line-height: 1.6; opacity: 0.9; }
-                        .btn { background: ${primary}; color: ${theme === 'light' ? '#fff' : '#000'}; border: none; padding: 15px 30px; font-size: 18px; border-radius: 5px; cursor: pointer; font-weight: bold; }
-                        .features { display: flex; justify-content: center; gap: 20px; padding: 50px; }
-                        .box { background: rgba(128,128,128,0.1); padding: 30px; border-radius: 10px; width: 30%; border-top: 3px solid ${primary}; }
-                    </style>
-                </head>
-                <body>
-                    <header>
-                        <div style="font-size:24px; font-weight:bold;">${type.toUpperCase()} PRO</div>
-                        <nav><a href="#">Ana Sayfa</a><a href="#">Özellikler</a><a href="#">İletişim</a></nav>
-                    </header>
-                    <div class="hero">
-                        <h1>${prompt}</h1>
-                        <p>Bu web sitesi Echo AI sistemi tarafından senin isteklerin doğrultusunda otomatik olarak kodlanmıştır.</p>
-                        <button class="btn">Hemen Başla</button>
-                    </div>
-                    <div class="features">
-                        <div class="box"><h3>Hızlı</h3><p>Optimize edilmiş kod yapısı.</p></div>
-                        <div class="box"><h3>Modern</h3><p>Güncel UI/UX standartları.</p></div>
-                        <div class="box"><h3>Responsive</h3><p>Mobil uyumlu tasarım.</p></div>
-                    </div>
-                </body>
-                </html>
-            `;
-            preview.srcdoc = generatedCode;
+            if(val === 'help') {
+                printCmd("Mevcut Komutlar:");
+                printCmd("- clear: Ekranı temizler");
+                printCmd("- ping: Sunucu gecikmesini ölçer");
+                printCmd("- echo [mesaj]: Mesajı yazdırır");
+                printCmd("- godmode: Sistem sınırlarını kaldırır", "cmd-success");
+            } 
+            else if(val === 'clear') { cmdHistory.innerHTML = ""; }
+            else if(val === 'ping') { printCmd("Sunucuya ping atılıyor... Süre: 12ms", "cmd-success"); }
+            else if(val.startsWith('echo ')) { printCmd(val.substring(5)); }
+            else if(val === 'godmode') { printCmd("WARNING: God Mode Enabled. All limits removed.", "cmd-success"); }
+            else { printCmd(`Komut bulunamadı: ${val}. Yardım için 'help' yazın.`, "cmd-error"); }
+            
+            e.target.value = '';
+        }
+    }
+    function printCmd(text, className = '') {
+        cmdHistory.innerHTML += `<div class="${className}">${text}</div>`;
+        cmdHistory.scrollTop = cmdHistory.scrollHeight;
+    }
+
+    /* --- AI WEB BUILDER MOTORU --- */
+    function generateCode() {
+        const prompt = document.getElementById('ai-prompt').value;
+        const out = document.getElementById('code-output');
+        const frame = document.getElementById('live-preview');
+        
+        if(!prompt) return alert("AI'ya ne yapacağını söylemelisin!");
+
+        out.innerText = "// AI Kodu Üretiyor...\n// Modüller Yükleniyor...";
+        frame.srcdoc = "<html><body style='background:#000;color:#0f0;display:flex;justify-content:center;align-items:center;height:100vh;font-family:monospace;'>SİSTEM DERLENİYOR...</body></html>";
+
+        setTimeout(() => {
+            const finalCode = `<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <style>
+        body { margin: 0; font-family: sans-serif; background: #0a0a0a; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
+        .box { background: #111; padding: 40px; border-radius: 10px; border: 1px solid #FA9048; text-align: center; box-shadow: 0 0 30px rgba(250,144,72,0.2); }
+        h1 { color: #FA9048; font-size: 30px; margin-bottom: 20px; text-transform: uppercase; }
+        p { color: #aaa; margin-bottom: 30px; }
+        button { background: #40E0D0; color: #000; border: none; padding: 15px 30px; border-radius: 5px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h1>ÜRETİLEN PROJE</h1>
+        <p>Senin İsteğin: "${prompt}"</p>
+        <button>SİSTEMİ TEST ET</button>
+    </div>
+</body>
+</html>`;
+            out.innerText = finalCode;
+            frame.srcdoc = finalCode;
         }, 2000);
     }
 </script>
