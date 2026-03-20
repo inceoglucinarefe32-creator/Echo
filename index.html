@@ -3,23 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Echo Universe | Sınırları Zorla</title>
-    <link rel="icon" type="image/png" href="logo.png">
+    <title>Echo Community | Sesini Duyur</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="logo.png">
+
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* --- CSS VARIABLES & RESET --- */
+        /* --- CSS RESET & DEĞİŞKENLER --- */
         :root {
-            --primary: #00f2fe;
-            --secondary: #4facfe;
-            --accent: #f472b6;
-            --bg-deep: #020617;
-            --bg-card: #0f172a;
-            --text-light: #f8fafc;
-            --glass: rgba(255, 255, 255, 0.03);
-            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --primary: #7289da; /* Discord Blurple */
+            --echo-cyan: #00f2fe;
+            --echo-purple: #7000ff;
+            --bg-dark: #06070d;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --text-glow: 0 0 10px rgba(0, 242, 254, 0.5);
+            --transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         * {
@@ -27,92 +27,96 @@
             padding: 0;
             box-sizing: border-box;
             outline: none;
+            cursor: none; /* Özel imleç için */
         }
 
         body {
-            background-color: var(--bg-deep);
-            color: var(--text-light);
-            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
             overflow-x: hidden;
-            line-height: 1.6;
+            scroll-behavior: smooth;
         }
 
-        h1, h2, h3, .brand {
-            font-family: 'Orbitron', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+        /* --- ÖZEL MOUSE İMLECİ (ANIMASYONLU) --- */
+        #cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--echo-cyan);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s;
         }
 
-        /* --- CUSTOM SCROLLBAR --- */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-deep); }
-        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
-
-        /* --- ANIMATIONS --- */
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
+        /* --- ARKA PLAN DALGA ANİMASYONU (ECHO ETKİSİ) --- */
+        .echo-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at center, #111 0%, #000 100%);
+            overflow: hidden;
         }
 
-        @keyframes pulse-glow {
-            0% { box-shadow: 0 0 5px var(--primary); }
-            50% { box-shadow: 0 0 25px var(--primary); }
-            100% { box-shadow: 0 0 5px var(--primary); }
+        .wave {
+            position: absolute;
+            border: 1px solid rgba(0, 242, 254, 0.1);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: waveAnim 8s infinite linear;
         }
 
-        @keyframes bg-slide {
-            from { background-position: 0% 50%; }
-            to { background-position: 100% 50%; }
+        @keyframes waveAnim {
+            0% { width: 0; height: 0; opacity: 1; }
+            100% { width: 150vw; height: 150vw; opacity: 0; }
         }
 
-        /* --- NAVIGATION --- */
+        /* --- HEADER / NAV --- */
         nav {
             position: fixed;
             top: 0;
             width: 100%;
-            padding: 20px 10%;
+            padding: 30px 10%;
             display: flex;
             justify-content: space-between;
             align-items: center;
             z-index: 1000;
-            transition: 0.5s;
-            background: linear-gradient(to bottom, rgba(2, 6, 23, 0.8), transparent);
+            backdrop-filter: blur(5px);
         }
 
-        nav.scrolled {
-            background: rgba(15, 23, 42, 0.95);
-            padding: 15px 10%;
-            border-bottom: 1px solid var(--primary);
-            backdrop-filter: blur(10px);
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .brand {
+            font-family: 'Syncopate', sans-serif;
             font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--primary);
+            font-weight: 700;
+            color: var(--echo-cyan);
             text-decoration: none;
+            letter-spacing: 5px;
         }
 
         .nav-links {
             display: flex;
-            gap: 30px;
+            gap: 40px;
             list-style: none;
         }
 
         .nav-links a {
+            color: #fff;
             text-decoration: none;
-            color: var(--text-light);
-            font-weight: 500;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
             transition: var(--transition);
-            font-size: 0.9rem;
+            opacity: 0.7;
         }
 
         .nav-links a:hover {
-            color: var(--primary);
-            text-shadow: 0 0 10px var(--primary);
+            opacity: 1;
+            color: var(--echo-cyan);
+            text-shadow: var(--text-glow);
         }
 
         /* --- HERO SECTION --- */
@@ -123,362 +127,335 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            background: radial-gradient(circle at center, rgba(0, 242, 254, 0.1) 0%, transparent 70%);
-            position: relative;
-        }
-
-        .hero-content {
-            z-index: 2;
+            padding: 0 10%;
         }
 
         .hero h1 {
-            font-size: 5rem;
-            background: linear-gradient(45deg, #fff, var(--primary), var(--secondary));
+            font-family: 'Syncopate', sans-serif;
+            font-size: clamp(3rem, 8vw, 6rem);
+            line-height: 1;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #fff, var(--echo-cyan), var(--echo-purple));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
-            animation: float 4s ease-in-out infinite;
+            animation: titleFloat 4s ease-in-out infinite;
+        }
+
+        @keyframes titleFloat {
+            0%, 100% { transform: translateY(0); filter: brightness(1); }
+            50% { transform: translateY(-10px); filter: brightness(1.3); }
         }
 
         .hero p {
-            font-size: 1.2rem;
-            color: #94a3b8;
+            font-size: 1rem;
+            color: #888;
             max-width: 600px;
-            margin-bottom: 30px;
+            letter-spacing: 1px;
+            margin-bottom: 40px;
         }
 
-        .cta-group {
-            display: flex;
-            gap: 20px;
-        }
-
-        .btn {
-            padding: 12px 35px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: var(--transition);
-            cursor: pointer;
-            border: none;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: var(--bg-deep);
-            box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
-        }
-
-        .btn-outline {
-            border: 2px solid var(--primary);
-            color: var(--primary);
+        /* --- DISCORD BUTON (HAREKETLİ) --- */
+        .dc-btn {
+            position: relative;
+            padding: 18px 50px;
             background: transparent;
+            color: #fff;
+            border: 1px solid var(--echo-cyan);
+            text-decoration: none;
+            font-weight: 800;
+            letter-spacing: 3px;
+            overflow: hidden;
+            transition: var(--transition);
         }
 
-        .btn:hover {
-            transform: scale(1.05) translateY(-3px);
-            filter: brightness(1.2);
+        .dc-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 242, 254, 0.4), transparent);
+            transition: 0.5s;
         }
 
-        /* --- STATS SECTION --- */
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            padding: 50px 10%;
-            background: var(--glass);
+        .dc-btn:hover::before {
+            left: 100%;
         }
 
-        .stat-card {
-            text-align: center;
-            padding: 20px;
-        }
-
-        .stat-card h3 {
-            font-size: 2.5rem;
-            color: var(--primary);
-        }
-
-        .stat-card p {
-            color: #64748b;
-            text-transform: uppercase;
-            font-size: 0.8rem;
+        .dc-btn:hover {
+            box-shadow: 0 0 30px var(--echo-cyan);
+            background: var(--echo-cyan);
+            color: #000;
         }
 
         /* --- BOOSTER SECTION --- */
         .booster-section {
-            padding: 100px 10%;
+            padding: 150px 10%;
+            position: relative;
         }
 
-        .section-title {
-            text-align: center;
-            margin-bottom: 60px;
+        .section-header {
+            margin-bottom: 80px;
+            text-align: left;
         }
 
-        .section-title h2 {
+        .section-header h2 {
+            font-family: 'Syncopate', sans-serif;
             font-size: 2.5rem;
-            color: var(--accent);
-            margin-bottom: 10px;
+            color: var(--echo-purple);
         }
 
-        .booster-container {
+        .booster-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
         }
 
-        .b-card {
-            background: var(--bg-card);
-            padding: 40px;
-            border-radius: 20px;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(244, 114, 182, 0.2);
+        /* ÖZEL BOOSTER KARTLARI */
+        .booster-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 50px;
+            border-radius: 2px; /* Keskin, modern görünüm */
+            backdrop-filter: blur(10px);
             transition: var(--transition);
-        }
-
-        .b-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: conic-gradient(transparent, transparent, transparent, var(--accent));
-            animation: rotate 4s linear infinite;
-            z-index: 0;
-            opacity: 0;
-        }
-
-        .b-card:hover::before { opacity: 1; }
-
-        .b-card:hover {
-            transform: translateY(-15px);
-            border-color: var(--accent);
-            box-shadow: 0 0 30px rgba(244, 114, 182, 0.2);
-        }
-
-        .b-content {
             position: relative;
-            z-index: 1;
-            background: var(--bg-card);
-            height: 100%;
-            width: 100%;
         }
 
-        @keyframes rotate {
-            100% { transform: rotate(360deg); }
+        .booster-card:hover {
+            border-color: var(--echo-cyan);
+            transform: translateY(-20px) scale(1.02);
+            background: rgba(0, 242, 254, 0.02);
         }
 
-        .b-card i {
-            font-size: 3rem;
-            color: var(--accent);
+        .booster-card i {
+            font-size: 3.5rem;
+            margin-bottom: 30px;
+            background: linear-gradient(45deg, var(--echo-cyan), var(--echo-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .booster-card h3 {
+            font-size: 1.8rem;
             margin-bottom: 20px;
+            letter-spacing: 2px;
         }
 
-        .b-list {
-            list-style: none;
-            margin-top: 20px;
+        .booster-card p {
+            color: #aaa;
+            font-size: 0.95rem;
+            line-height: 1.8;
         }
 
-        .b-list li {
-            margin-bottom: 12px;
+        .benefit-tag {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 8px 20px;
+            background: rgba(112, 0, 255, 0.2);
+            border: 1px solid var(--echo-purple);
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            color: #fff;
+            text-transform: uppercase;
+        }
+
+        /* --- ISTATISTIKLER --- */
+        .stats-container {
+            padding: 100px 10%;
             display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #cbd5e1;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 50px;
+            background: rgba(0,0,0,0.5);
         }
 
-        .b-list i {
-            font-size: 1rem;
-            margin-bottom: 0;
+        .stat-item {
+            text-align: center;
         }
 
-        /* --- SERVER IP COPY --- */
-        .ip-box {
-            background: var(--bg-card);
-            padding: 20px;
-            border-radius: 10px;
-            display: inline-flex;
-            align-items: center;
-            gap: 20px;
-            margin-top: 40px;
-            cursor: pointer;
-            border: 1px dashed var(--primary);
+        .stat-number {
+            font-family: 'Syncopate', sans-serif;
+            font-size: 3rem;
+            display: block;
+            color: var(--echo-cyan);
         }
 
-        .ip-box:active { transform: scale(0.95); }
+        .stat-label {
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-size: 0.7rem;
+            color: #555;
+            margin-top: 10px;
+        }
 
         /* --- FOOTER --- */
         footer {
-            padding: 50px 10%;
-            background: #020617;
+            padding: 100px 10% 50px;
             text-align: center;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-top: 1px solid rgba(255,255,255,0.05);
         }
 
-        .social-links {
+        .social-icons {
             display: flex;
             justify-content: center;
-            gap: 20px;
-            margin-bottom: 20px;
+            gap: 30px;
+            margin-bottom: 40px;
         }
 
-        .social-links a {
-            color: var(--text-light);
+        .social-icons a {
             font-size: 1.5rem;
+            color: #444;
             transition: 0.3s;
         }
 
-        .social-links a:hover { color: var(--primary); }
+        .social-icons a:hover {
+            color: var(--echo-cyan);
+            transform: rotate(15deg);
+        }
+
+        .copyright {
+            font-size: 0.7rem;
+            color: #333;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
 
         /* --- RESPONSIVE --- */
         @media (max-width: 768px) {
-            .hero h1 { font-size: 3rem; }
+            nav { padding: 20px; }
             .nav-links { display: none; }
+            .hero h1 { font-size: 3.5rem; }
+            .booster-card { padding: 30px; }
         }
     </style>
 </head>
 <body>
 
-    <nav id="navbar">
-        <a href="#" class="logo">
-            <i class="fas fa-wave-square"></i> ECHO
-        </a>
+    <div id="cursor"></div>
+
+    <div class="echo-bg" id="echoBg"></div>
+
+    <nav>
+        <a href="#" class="brand">ECHO</a>
         <ul class="nav-links">
-            <li><a href="#home">Ana Sayfa</a></li>
-            <li><a href="#features">Özellikler</a></li>
+            <li><a href="#home">Giriş</a></li>
             <li><a href="#booster">Booster</a></li>
-            <li><a href="#discord">Topluluk</a></li>
+            <li><a href="#stats">Sayılar</a></li>
+            <li><a href="https://discord.gg/link" style="color: var(--echo-cyan);">Katıl</a></li>
         </ul>
-        <a href="#" class="btn btn-primary" style="padding: 8px 20px;">Oyna</a>
     </nav>
 
     <section class="hero" id="home">
-        <div class="hero-content">
-            <p>SESİNİN YANKISI BURADA BAŞLIYOR</p>
-            <h1>YANKI DÜNYASI</h1>
-            <p>Eşsiz sistemler, lag barındırmayan altyapı ve devasa bir topluluk. Sen yoksan bir kişi eksiğiz!</p>
-            
-            <div class="cta-group">
-                <button class="btn btn-primary" onclick="copyIP()">IP Adresini Kopyala</button>
-                <a href="https://discord.gg/davet-linkin" class="btn btn-outline">Discord'a Katıl</a>
-            </div>
-
-            <div class="ip-box" onclick="copyIP()" id="ipDisplay">
-                <span>IP: play.yankicraft.com</span>
-                <i class="far fa-copy"></i>
-            </div>
-        </div>
+        <p data-aos="fade-up">DİJİTAL YANKININ MERKEZİ</p>
+        <h1 id="mainTitle">ECHO COMMUNITY</h1>
+        <p>Sadece bir Discord sunucusu değil, bir yaşam tarzı. En kaliteli sohbetler, en hızlı destek ve eşsiz bir atmosfer.</p>
+        <a href="https://discord.gg/link" class="dc-btn">SUNUCUYA KATIL</a>
     </section>
 
-    <div class="stats">
-        <div class="stat-card">
-            <h3>500+</h3>
-            <p>Aktif Oyuncu</p>
+    <div class="stats-container" id="stats">
+        <div class="stat-item">
+            <span class="stat-number">1,240</span>
+            <span class="stat-label">Üye</span>
         </div>
-        <div class="stat-card">
-            <h3>0</h3>
-            <p>Gecikme (Ping)</p>
+        <div class="stat-item">
+            <span class="stat-number">42</span>
+            <span class="stat-label">Booster</span>
         </div>
-        <div class="stat-card">
-            <h3>24/7</h3>
-            <p>Kesintisiz Aktif</p>
-        </div>
-        <div class="stat-card">
-            <h3>15+</h3>
-            <p>Özel Etkinlik</p>
+        <div class="stat-item">
+            <span class="stat-number">24/7</span>
+            <span class="stat-label">Aktif Ses</span>
         </div>
     </div>
 
     <section class="booster-section" id="booster">
-        <div class="section-title">
+        <div class="section-header">
             <h2>BOOSTER AYRICALIKLARI</h2>
-            <p>Sunucumuzu destekle, eşsiz ödüllerin sahibi ol!</p>
+            <p>Sunucumuzu uçuşa geçir, kendine has kimliğini kazan.</p>
         </div>
 
-        <div class="booster-container">
-            <div class="b-card">
-                <div class="b-content">
-                    <i class="fas fa-gem"></i>
-                    <h3>Visual Perks</h3>
-                    <ul class="b-list">
-                        <li><i class="fas fa-check"></i> Özel Renkli İsim</li>
-                        <li><i class="fas fa-check"></i> Sohbet Rozeti</li>
-                        <li><i class="fas fa-check"></i> Özel Giriş Mesajı</li>
-                    </ul>
-                </div>
+        <div class="booster-grid">
+            <div class="booster-card">
+                <i class="fas fa-fingerprint"></i>
+                <h3>ÖZEL TAG</h3>
+                <p>İsminin başına veya sonuna sadece sana ait, sunucu içinde seni anında belli edecek o özel sembolü ekle. Herkesten farklı olduğunu hissettir.</p>
+                <span class="benefit-tag">Yankı Kimliği</span>
             </div>
 
-            <div class="b-card">
-                <div class="b-content">
-                    <i class="fas fa-rocket"></i>
-                    <h3>Gameplay Perks</h3>
-                    <ul class="b-list">
-                        <li><i class="fas fa-check"></i> %25 Daha Fazla XP</li>
-                        <li><i class="fas fa-check"></i> Özel "Booster" Kiti</li>
-                        <li><i class="fas fa-check"></i> Öncelikli Sıra</li>
-                    </ul>
-                </div>
+            <div class="booster-card">
+                <i class="fas fa-crown"></i>
+                <h3>ÖZEL ROL</h3>
+                <p>Kendi rol ismini ve rengini belirle. Rol listesinde en üstte, kendine ait bir taht kur. Gökkuşağı animasyonlu rollerle sohbete renk kat.</p>
+                <span class="benefit-tag">Kişisel Taht</span>
             </div>
 
-            <div class="b-card">
-                <div class="b-content">
-                    <i class="fas fa-crown"></i>
-                    <h3>Social Perks</h3>
-                    <ul class="b-list">
-                        <li><i class="fas fa-check"></i> Booster Özel Kanalı</li>
-                        <li><i class="fas fa-check"></i> Emoji Kullanım Yetkisi</li>
-                        <li><i class="fas fa-check"></i> Gizli Çekilişlere Katılım</li>
-                    </ul>
-                </div>
+            <div class="booster-card">
+                <i class="fas fa-bolt"></i>
+                <h3>EKSTRA GÜÇ</h3>
+                <p>Resim paylaşma yetkisi, harici emojiler, özel booster kanalı erişimi ve çekilişlerde 2 kat kazanma şansı seni bekliyor.</p>
+                <span class="benefit-tag">Max Yetki</span>
             </div>
         </div>
     </section>
 
     <footer>
-        <div class="social-links">
+        <div class="social-icons">
             <a href="#"><i class="fab fa-discord"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
             <a href="#"><i class="fab fa-instagram"></i></a>
-            <a href="#"><i class="fab fa-youtube"></i></a>
-            <a href="#"><i class="fab fa-tiktok"></i></a>
         </div>
-        <p>&copy; 2026 Yankı Dünyası. Tüm Hakları Saklıdır.</p>
-        <p style="font-size: 0.7rem; color: #475569; margin-top: 10px;">Bu site bir AI asistanı tarafından sevgiyle tasarlandı.</p>
+        <p class="copyright">© 2026 ECHO COMMUNITY • ALL RIGHTS RESERVED</p>
     </footer>
 
     <script>
-        // Navbar Scroll Efekti
-        window.onscroll = function() {
-            const nav = document.getElementById('navbar');
-            if (window.pageYOffset > 50) {
-                nav.classList.add('scrolled');
-            } else {
-                nav.classList.remove('scrolled');
-            }
-        };
+        // 1. Mouse Takip Eden İmleç
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', e => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
 
-        // IP Kopyalama Fonksiyonu
-        function copyIP() {
-            const ip = "play.yankicraft.com";
-            navigator.clipboard.writeText(ip);
+        // 2. Arka Planda "Echo" Dalgaları Oluşturma
+        const bg = document.getElementById('echoBg');
+        function createWave() {
+            const wave = document.createElement('div');
+            wave.classList.add('wave');
             
-            const ipBox = document.getElementById('ipDisplay');
-            const originalText = ipBox.innerHTML;
+            // Rastgele konum (Merkeze yakın)
+            wave.style.left = '50%';
+            wave.style.top = '50%';
             
-            ipBox.innerHTML = "<span>BAŞARIYLA KOPYALANDI!</span> <i class='fas fa-check'></i>";
-            ipBox.style.borderColor = "#4ade80";
-            
+            bg.appendChild(wave);
+
+            // Animasyon bitince temizle
             setTimeout(() => {
-                ipBox.innerHTML = originalText;
-                ipBox.style.borderColor = "var(--primary)";
-            }, 2000);
+                wave.remove();
+            }, 8000);
         }
 
-        // Mouse Takip Eden Parçacık Efekti (Opsiyonel Ekran Işığı)
-        document.addEventListener('mousemove', (e) => {
-            const moveX = (e.clientX - window.innerWidth / 2) * 0.01;
-            const moveY = (e.clientY - window.innerHeight / 2) * 0.01;
-            document.querySelector('.hero h1').style.transform = `translate(${moveX}px, ${moveY}px)`;
+        // Her 2 saniyede bir yeni dalga
+        setInterval(createWave, 2000);
+
+        // 3. Başlık İçin Mouse Takip Efekti
+        const title = document.getElementById('mainTitle');
+        document.addEventListener('mousemove', e => {
+            let x = (window.innerWidth / 2 - e.pageX) / 30;
+            let y = (window.innerHeight / 2 - e.pageY) / 30;
+            title.style.transform = `translateX(${x}px) translateY(${y}px)`;
+        });
+
+        // 4. Scroll Reveal (Basit Giriş Animasyonu)
+        window.addEventListener('scroll', () => {
+            const cards = document.querySelectorAll('.booster-card');
+            cards.forEach(card => {
+                const cardTop = card.getBoundingClientRect().top;
+                if(cardTop < window.innerHeight - 100) {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }
+            });
         });
     </script>
 </body>
