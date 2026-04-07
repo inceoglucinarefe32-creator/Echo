@@ -3,123 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Echo Community | Sesini Duyur</title>
-    
-    <link rel="icon" type="image/png" href="logo.png">
-
-    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    <title>[husnu]Hub | Ultra Performance</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
-        /* --- CSS RESET & DEĞİŞKENLER --- */
         :root {
-            --primary: #7289da; /* Discord Blurple */
-            --echo-cyan: #00f2fe;
-            --echo-purple: #7000ff;
-            --bg-dark: #06070d;
-            --card-bg: rgba(255, 255, 255, 0.03);
-            --text-glow: 0 0 10px rgba(0, 242, 254, 0.5);
-            --transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            --glow: #00ffcc;
+            --neon-pink: #ff007f;
+            --bg: #050505;
+            --card: rgba(15, 15, 15, 0.9);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            outline: none;
-            cursor: none; /* Özel imleç için */
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: crosshair; }
 
         body {
-            background-color: var(--bg-dark);
+            background-color: var(--bg);
             color: #fff;
-            font-family: 'Montserrat', sans-serif;
+            font-family: 'Rajdhani', sans-serif;
             overflow-x: hidden;
             scroll-behavior: smooth;
         }
 
-        /* --- ÖZEL MOUSE İMLECİ (ANIMASYONLU) --- */
-        #cursor {
-            width: 20px;
-            height: 20px;
-            border: 2px solid var(--echo-cyan);
-            border-radius: 50%;
+        canvas#parallax-bg {
             position: fixed;
-            pointer-events: none;
-            z-index: 9999;
-            transition: transform 0.1s;
-        }
-
-        /* --- ARKA PLAN DALGA ANİMASYONU (ECHO ETKİSİ) --- */
-        .echo-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
             z-index: -1;
-            background: radial-gradient(circle at center, #111 0%, #000 100%);
-            overflow: hidden;
         }
 
-        .wave {
-            position: absolute;
-            border: 1px solid rgba(0, 242, 254, 0.1);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            animation: waveAnim 8s infinite linear;
-        }
-
-        @keyframes waveAnim {
-            0% { width: 0; height: 0; opacity: 1; }
-            100% { width: 150vw; height: 150vw; opacity: 0; }
-        }
-
-        /* --- HEADER / NAV --- */
-        nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            padding: 30px 10%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 1000;
-            backdrop-filter: blur(5px);
-        }
-
-        .brand {
-            font-family: 'Syncopate', sans-serif;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--echo-cyan);
-            text-decoration: none;
-            letter-spacing: 5px;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 40px;
-            list-style: none;
-        }
-
-        .nav-links a {
-            color: #fff;
-            text-decoration: none;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            transition: var(--transition);
-            opacity: 0.7;
-        }
-
-        .nav-links a:hover {
-            opacity: 1;
-            color: var(--echo-cyan);
-            text-shadow: var(--text-glow);
-        }
-
-        /* --- HERO SECTION --- */
+        /* --- ANA SAYFA VE BUTONLAR --- */
         .hero {
             height: 100vh;
             display: flex;
@@ -127,336 +37,275 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 0 10%;
+            background: radial-gradient(circle, rgba(0,255,204,0.1) 0%, rgba(0,0,0,1) 70%);
         }
 
-        .hero h1 {
-            font-family: 'Syncopate', sans-serif;
-            font-size: clamp(3rem, 8vw, 6rem);
-            line-height: 1;
-            margin-bottom: 20px;
-            background: linear-gradient(to right, #fff, var(--echo-cyan), var(--echo-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: titleFloat 4s ease-in-out infinite;
-        }
-
-        @keyframes titleFloat {
-            0%, 100% { transform: translateY(0); filter: brightness(1); }
-            50% { transform: translateY(-10px); filter: brightness(1.3); }
-        }
-
-        .hero p {
-            font-size: 1rem;
-            color: #888;
-            max-width: 600px;
-            letter-spacing: 1px;
-            margin-bottom: 40px;
-        }
-
-        /* --- DISCORD BUTON (HAREKETLİ) --- */
-        .dc-btn {
-            position: relative;
-            padding: 18px 50px;
-            background: transparent;
-            color: #fff;
-            border: 1px solid var(--echo-cyan);
-            text-decoration: none;
-            font-weight: 800;
-            letter-spacing: 3px;
-            overflow: hidden;
-            transition: var(--transition);
-        }
-
-        .dc-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 242, 254, 0.4), transparent);
-            transition: 0.5s;
-        }
-
-        .dc-btn:hover::before {
-            left: 100%;
-        }
-
-        .dc-btn:hover {
-            box-shadow: 0 0 30px var(--echo-cyan);
-            background: var(--echo-cyan);
-            color: #000;
-        }
-
-        /* --- BOOSTER SECTION --- */
-        .booster-section {
-            padding: 150px 10%;
-            position: relative;
-        }
-
-        .section-header {
-            margin-bottom: 80px;
-            text-align: left;
-        }
-
-        .section-header h2 {
-            font-family: 'Syncopate', sans-serif;
-            font-size: 2.5rem;
-            color: var(--echo-purple);
-        }
-
-        .booster-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 40px;
-        }
-
-        /* ÖZEL BOOSTER KARTLARI */
-        .booster-card {
-            background: var(--card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 50px;
-            border-radius: 2px; /* Keskin, modern görünüm */
-            backdrop-filter: blur(10px);
-            transition: var(--transition);
-            position: relative;
-        }
-
-        .booster-card:hover {
-            border-color: var(--echo-cyan);
-            transform: translateY(-20px) scale(1.02);
-            background: rgba(0, 242, 254, 0.02);
-        }
-
-        .booster-card i {
-            font-size: 3.5rem;
-            margin-bottom: 30px;
-            background: linear-gradient(45deg, var(--echo-cyan), var(--echo-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .booster-card h3 {
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-            letter-spacing: 2px;
-        }
-
-        .booster-card p {
-            color: #aaa;
-            font-size: 0.95rem;
-            line-height: 1.8;
-        }
-
-        .benefit-tag {
-            display: inline-block;
-            margin-top: 25px;
-            padding: 8px 20px;
-            background: rgba(112, 0, 255, 0.2);
-            border: 1px solid var(--echo-purple);
-            border-radius: 50px;
-            font-size: 0.7rem;
-            font-weight: bold;
-            color: #fff;
+        .logo-glitch {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 5rem;
             text-transform: uppercase;
+            color: var(--glow);
+            text-shadow: 3px 3px var(--neon-pink);
+            animation: shake 0.5s infinite alternate;
         }
 
-        /* --- ISTATISTIKLER --- */
-        .stats-container {
-            padding: 100px 10%;
+        .platform-selector {
             display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            gap: 50px;
-            background: rgba(0,0,0,0.5);
+            gap: 40px;
+            margin-top: 50px;
         }
 
-        .stat-item {
-            text-align: center;
+        .btn-platform {
+            padding: 25px 60px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            background: transparent;
+            color: white;
+            border: 2px solid var(--glow);
+            position: relative;
+            overflow: hidden;
+            transition: 0.3s;
+            clip-path: polygon(15% 0, 100% 0, 85% 100%, 0 100%);
         }
 
-        .stat-number {
-            font-family: 'Syncopate', sans-serif;
-            font-size: 3rem;
-            display: block;
-            color: var(--echo-cyan);
+        .btn-platform:hover {
+            background: var(--glow);
+            color: black;
+            box-shadow: 0 0 50px var(--glow);
+            transform: scale(1.1) skewX(-10deg);
         }
 
-        .stat-label {
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            font-size: 0.7rem;
-            color: #555;
-            margin-top: 10px;
+        /* --- SAYFA YAPISI (MODÜLER) --- */
+        .page { display: none; padding: 100px 10%; min-height: 100vh; }
+        .page.active { display: block; animation: fadeIn 0.8s; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        .mod-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .mod-card {
+            background: var(--card);
+            border: 1px solid #333;
+            padding: 20px;
+            border-radius: 10px;
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .mod-card:hover {
+            border-color: var(--neon-pink);
+            box-shadow: 0 0 20px rgba(255, 0, 127, 0.4);
+            transform: translateY(-5px);
+        }
+
+        .download-btn {
+            display: inline-block;
+            margin-top: 15px;
+            color: var(--glow);
+            text-decoration: none;
+            border: 1px solid var(--glow);
+            padding: 5px 15px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+
+        .download-btn:hover { background: var(--glow); color: black; }
+
+        /* --- FPS REHBERİ --- */
+        .guide-box {
+            background: rgba(255,255,255,0.05);
+            padding: 30px;
+            border-radius: 20px;
+            border-left: 5px solid var(--neon-pink);
+            margin-bottom: 20px;
         }
 
         /* --- FOOTER --- */
         footer {
-            padding: 100px 10% 50px;
+            padding: 50px;
             text-align: center;
-            border-top: 1px solid rgba(255,255,255,0.05);
+            border-top: 1px solid #222;
+            margin-top: 100px;
+            background: #000;
         }
 
-        .social-icons {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin-bottom: 40px;
+        .powered {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            letter-spacing: 5px;
+            background: linear-gradient(to right, #fff, var(--glow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .social-icons a {
-            font-size: 1.5rem;
-            color: #444;
-            transition: 0.3s;
-        }
-
-        .social-icons a:hover {
-            color: var(--echo-cyan);
-            transform: rotate(15deg);
-        }
-
-        .copyright {
-            font-size: 0.7rem;
-            color: #333;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-
-        /* --- RESPONSIVE --- */
-        @media (max-width: 768px) {
-            nav { padding: 20px; }
-            .nav-links { display: none; }
-            .hero h1 { font-size: 3.5rem; }
-            .booster-card { padding: 30px; }
+        @keyframes shake {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
         }
     </style>
 </head>
 <body>
 
-    <div id="cursor"></div>
+<canvas id="parallax-bg"></canvas>
 
-    <div class="echo-bg" id="echoBg"></div>
-
-    <nav>
-        <a href="#" class="brand">ECHO</a>
-        <ul class="nav-links">
-            <li><a href="#home">Giriş</a></li>
-            <li><a href="#booster">Booster</a></li>
-            <li><a href="#stats">Sayılar</a></li>
-            <li><a href="https://discord.gg/link" style="color: var(--echo-cyan);">Katıl</a></li>
-        </ul>
-    </nav>
-
-    <section class="hero" id="home">
-        <p data-aos="fade-up">DİJİTAL YANKININ MERKEZİ</p>
-        <h1 id="mainTitle">ECHO COMMUNITY</h1>
-        <p>Sadece bir Discord sunucusu değil, bir yaşam tarzı. En kaliteli sohbetler, en hızlı destek ve eşsiz bir atmosfer.</p>
-        <a href="https://discord.gg/link" class="dc-btn">SUNUCUYA KATIL</a>
+<div id="home" class="page active">
+    <section class="hero">
+        <h1 class="logo-glitch">[husnu]HUB</h1>
+        <p style="letter-spacing: 10px; color: var(--glow);">FPS OPTIMIZATION CENTER</p>
+        
+        <div class="platform-selector">
+            <button class="btn-platform" onclick="showPage('pc-page')">PC / MOJO</button>
+            <button class="btn-platform" onclick="showPage('mobile-page')">MOBILE / POJAV</button>
+        </div>
+        
+        <div style="margin-top: 40px; color: #555;">Discord: j2wwWmwaSk</div>
     </section>
+</div>
 
-    <div class="stats-container" id="stats">
-        <div class="stat-item">
-            <span class="stat-number">1,240</span>
-            <span class="stat-label">Üye</span>
-        </div>
-        <div class="stat-item">
-            <span class="stat-number">42</span>
-            <span class="stat-label">Booster</span>
-        </div>
-        <div class="stat-item">
-            <span class="stat-number">24/7</span>
-            <span class="stat-label">Aktif Ses</span>
-        </div>
+<div id="pc-page" class="page">
+    <button onclick="showPage('home')" class="download-btn">← GERİ DÖN</button>
+    <h2 style="font-size: 3rem; color: var(--glow); margin: 20px 0;">MOJO FPS BOOST</h2>
+    
+    <div class="guide-box">
+        <h3>PC FPS ARTTIRMA YÖNTEMLERİ</h3>
+        <p>1. <b>Nvidia Control Panel:</b> "Düşük Gecikme Oranı" modunu 'Ultra' yapın.</p>
+        <p>2. <b>Mojo JVM:</b> Bellek kısmına <code>-Xmx6G -XX:+UseG1GC</code> ekleyin.</p>
+        <p>3. <b>Windows:</b> Oyun modunu açın ve GPU hızlandırmayı aktif edin.</p>
     </div>
 
-    <section class="booster-section" id="booster">
-        <div class="section-header">
-            <h2>BOOSTER AYRICALIKLARI</h2>
-            <p>Sunucumuzu uçuşa geçir, kendine has kimliğini kazan.</p>
-        </div>
+    <div class="mod-grid">
+        <div class="mod-card"><h3>Sodium</h3><p>Temel grafik motoru.</p><a href="https://www.curseforge.com/minecraft/mc-mods/sodium" class="download-btn">İNDİR</a></div>
+        <div class="mod-card"><h3>Lithium</h3><p>Oyun içi fizik hızlandırıcı.</p><a href="https://www.curseforge.com/minecraft/mc-mods/lithium" class="download-btn">İNDİR</a></div>
+        <div class="mod-card"><h3>BetterHurtCam</h3><p>Hasar sarsıntısını azaltır.</p><a href="https://modrinth.com/mod/betterhurtcam" class="download-btn">İNDİR</a></div>
+        <div class="mod-card"><h3>Mouse Tweaks</h3><p>Envanter yönetimini hızlandırır.</p><a href="https://www.curseforge.com/minecraft/mc-mods/mouse-tweaks" class="download-btn">İNDİR</a></div>
+        <div class="mod-card"><h3>Perspective</h3><p>360 derece bakış açısı.</p><a href="https://modrinth.com/mod/perspektive" class="download-btn">İNDİR</a></div>
+        <div class="mod-card"><h3>Sodium Extra</h3><p>Daha fazla grafik ayarı.</p><a href="https://modrinth.com/mod/sodium-extra" class="download-btn">İNDİR</a></div>
+        <div class="mod-card"><h3>Not Enough Animations</h3><p>Gerçekçi karakter hareketleri.</p><a href="https://modrinth.com/mod/not-enough-animations" class="download-btn">İNDİR</a></div>
+        <div class="mod-card"><h3>Cloth Config</h3><p>Mod ayarları kütüphanesi.</p><a href="https://modrinth.com/mod/cloth-config" class="download-btn">İNDİR</a></div>
+    </div>
+</div>
 
-        <div class="booster-grid">
-            <div class="booster-card">
-                <i class="fas fa-fingerprint"></i>
-                <h3>ÖZEL TAG</h3>
-                <p>İsminin başına veya sonuna sadece sana ait, sunucu içinde seni anında belli edecek o özel sembolü ekle. Herkesten farklı olduğunu hissettir.</p>
-                <span class="benefit-tag">Yankı Kimliği</span>
-            </div>
+<div id="mobile-page" class="page">
+    <button onclick="showPage('home')" class="download-btn">← GERİ DÖN</button>
+    <h2 style="font-size: 3rem; color: var(--neon-pink); margin: 20px 0;">POJAV FPS BOOST</h2>
+    
+    <div class="guide-box" style="border-left-color: var(--glow);">
+        <h3>MOBİL FPS ARTTIRMA YÖNTEMLERİ</h3>
+        <p>1. <b>Renderer:</b> Pojav ayarlarından "Holy Render" veya "VirGL" seçin.</p>
+        <p>2. <b>Çözünürlük:</b> %75 veya %80'e çekerek GPU yükünü azaltın.</p>
+        <p>3. <b>Java:</b> Runtime Manager'dan Java 17 kullanın.</p>
+    </div>
 
-            <div class="booster-card">
-                <i class="fas fa-crown"></i>
-                <h3>ÖZEL ROL</h3>
-                <p>Kendi rol ismini ve rengini belirle. Rol listesinde en üstte, kendine ait bir taht kur. Gökkuşağı animasyonlu rollerle sohbete renk kat.</p>
-                <span class="benefit-tag">Kişisel Taht</span>
-            </div>
+    <div class="mod-grid">
+        <div class="mod-card"><h3>Pojav Optimizer</h3><p>Mobil özel FPS config.</p><a href="#" class="download-btn">İNDİR</a></div>
+        <div class="mod-card"><h3>FastChest</h3><p>Sandık renderlarını hızlandırır.</p><a href="#" class="download-btn">İNDİR</a></div>
+        <div class="mod-card"><h3>NoFog</h3><p>Sisi kaldırarak görüşü netleştirir.</p><a href="#" class="download-btn">İNDİR</a></div>
+    </div>
+</div>
 
-            <div class="booster-card">
-                <i class="fas fa-bolt"></i>
-                <h3>EKSTRA GÜÇ</h3>
-                <p>Resim paylaşma yetkisi, harici emojiler, özel booster kanalı erişimi ve çekilişlerde 2 kat kazanma şansı seni bekliyor.</p>
-                <span class="benefit-tag">Max Yetki</span>
-            </div>
-        </div>
-    </section>
+<footer>
+    <div class="powered">POWERED BY SLAVYX</div>
+    <p style="margin-top: 10px; color: #444;">[husnu]Hub Admin Console v4.0</p>
+</footer>
 
-    <footer>
-        <div class="social-icons">
-            <a href="#"><i class="fab fa-discord"></i></a>
-            <a href="#"><i class="fab fa-twitter"></i></a>
-            <a href="#"><i class="fab fa-instagram"></i></a>
-        </div>
-        <p class="copyright">© 2026 ECHO COMMUNITY • ALL RIGHTS RESERVED</p>
-    </footer>
+<script>
+    // SAYFA DEĞİŞTİRME MANTIĞI
+    function showPage(pageId) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(pageId).classList.add('active');
+        window.scrollTo(0,0);
+    }
 
-    <script>
-        // 1. Mouse Takip Eden İmleç
-        const cursor = document.getElementById('cursor');
-        document.addEventListener('mousemove', e => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-        });
+    // PARAZİT / PARÇACIK SİSTEMİ
+    const canvas = document.getElementById('parallax-bg');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 
-        // 2. Arka Planda "Echo" Dalgaları Oluşturma
-        const bg = document.getElementById('echoBg');
-        function createWave() {
-            const wave = document.createElement('div');
-            wave.classList.add('wave');
-            
-            // Rastgele konum (Merkeze yakın)
-            wave.style.left = '50%';
-            wave.style.top = '50%';
-            
-            bg.appendChild(wave);
+    let particles = [];
+    let mouse = { x: null, y: null };
 
-            // Animasyon bitince temizle
-            setTimeout(() => {
-                wave.remove();
-            }, 8000);
+    window.addEventListener('mousemove', (e) => { mouse.x = e.x; mouse.y = e.y; });
+
+    class Particle {
+        constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.size = Math.random() * 2;
+            this.baseX = this.x;
+            this.baseY = this.y;
+            this.density = (Math.random() * 30) + 1;
         }
 
-        // Her 2 saniyede bir yeni dalga
-        setInterval(createWave, 2000);
+        draw() {
+            ctx.fillStyle = 'rgba(0, 255, 204, 0.5)';
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.closePath();
+            ctx.fill();
+        }
 
-        // 3. Başlık İçin Mouse Takip Efekti
-        const title = document.getElementById('mainTitle');
-        document.addEventListener('mousemove', e => {
-            let x = (window.innerWidth / 2 - e.pageX) / 30;
-            let y = (window.innerHeight / 2 - e.pageY) / 30;
-            title.style.transform = `translateX(${x}px) translateY(${y}px)`;
-        });
+        update() {
+            let dx = mouse.x - this.x;
+            let dy = mouse.y - this.y;
+            let distance = Math.sqrt(dx*dx + dy*dy);
+            let forceDirectionX = dx / distance;
+            let forceDirectionY = dy / distance;
+            let maxDistance = 150;
+            let force = (maxDistance - distance) / maxDistance;
+            let directionX = forceDirectionX * force * this.density;
+            let directionY = forceDirectionY * force * this.density;
 
-        // 4. Scroll Reveal (Basit Giriş Animasyonu)
-        window.addEventListener('scroll', () => {
-            const cards = document.querySelectorAll('.booster-card');
-            cards.forEach(card => {
-                const cardTop = card.getBoundingClientRect().top;
-                if(cardTop < window.innerHeight - 100) {
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
+            if (distance < maxDistance) {
+                this.x -= directionX;
+                this.y -= directionY;
+            } else {
+                if (this.x !== this.baseX) {
+                    let dx = this.x - this.baseX;
+                    this.x -= dx/10;
                 }
-            });
-        });
-    </script>
+                if (this.y !== this.baseY) {
+                    let dy = this.y - this.baseY;
+                    this.y -= dy/10;
+                }
+            }
+        }
+    }
+
+    function init() {
+        particles = [];
+        for (let i = 0; i < 200; i++) {
+            particles.push(new Particle());
+        }
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let i = 0; i < particles.length; i++) {
+            particles[i].draw();
+            particles[i].update();
+        }
+        requestAnimationFrame(animate);
+    }
+
+    init();
+    animate();
+
+    window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        init();
+    });
+</script>
+
 </body>
 </html>
